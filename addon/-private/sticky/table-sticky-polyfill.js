@@ -1,6 +1,8 @@
 /* global ResizeSensor */
 /* eslint-disable ember/no-observers */
 
+import { bind, scheduleOnce } from '@ember/runloop';
+
 const TABLE_POLYFILL_MAP = new WeakMap();
 
 class TableStickyPolyfill {
@@ -16,7 +18,7 @@ class TableStickyPolyfill {
     this.setupResizeSensors();
     this.setupRowMutationObservers();
 
-    this.mutationObserver = new MutationObserver(() => {
+    this._callback = () => {
       this.teardownResizeSensors();
       this.teardownRowMutationObservers();
 
@@ -24,7 +26,13 @@ class TableStickyPolyfill {
       this.setupRowMutationObservers();
 
       this.repositionStickyElements();
+    };
+
+    this.__callback = bind(this, () => {
+      scheduleOnce('afterRender', this, this._callback);
     });
+
+    this.mutationObserver = new MutationObserver(this.__callback);
 
     this.mutationObserver.observe(this.element, { childList: true });
   }
