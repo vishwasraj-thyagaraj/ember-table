@@ -26,7 +26,7 @@
     "test:ember-compatibility": "ember try:each"
   },
   "dependencies": {
-    "@html-next/vertical-collection": "^1.0.0-beta.14",
+    "@html-next/vertical-collection": "1.0.0-beta.14",
     "broccoli-string-replace": "^0.1.2",
     "css-element-queries": "^0.4.0",
     "ember-assign-polyfill": "^2.2.0",
