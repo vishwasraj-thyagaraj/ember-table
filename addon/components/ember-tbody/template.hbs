@@ -1,3 +1,4 @@
+{{#if verticalCollection}}
 {{#vertical-collection wrappedRows
   containerSelector=_containerSelector
 
@@ -45,3 +46,36 @@
 {{else if shouldYieldToInverse}}
   {{yield to='inverse'}}
 {{/vertical-collection}}
+{{else}}
+  {{#each wrappedRows as |rowValue| }}
+    {{#-ember-table-private/row-wrapper
+      rowValue=rowValue
+      columns=columns
+
+      columnMetaCache=columnMetaCache
+      rowMetaCache=rowMetaCache
+
+      canSelect=canSelect
+      rowSelectionMode=rowSelectionMode
+      checkboxSelectionMode=checkboxSelectionMode
+
+      as |api|
+    }}
+      {{#if hasBlock}}
+        {{yield (hash
+          rowValue=api.rowValue
+          rowMeta=api.rowMeta
+          cells=api.cells
+          rowSelectionMode=api.rowSelectionMode
+
+          row=(component "ember-tr" api=api)
+        )}}
+      {{else}}
+        {{ember-tr api=api}}
+      {{/if}}
+    {{/-ember-table-private/row-wrapper}}
+
+  {{else if shouldYieldToInverse}}
+    {{yield to='inverse'}}
+  {{/each}}
+{{/if}}
